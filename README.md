@@ -38,14 +38,14 @@ WABuddy connects to your WhatsApp account and turns that conversation history in
 
 | Connect | Ask | Review |
 | :--- | :--- | :--- |
-| Link WhatsApp through the animated phone's pairing QR. | Use a short command or describe your goal in Chat. | Open the live spreadsheet, source evidence, and agent workflow. |
+| Link WhatsApp through the animated phone's pairing QR. | Describe the outcome you want in Chat. | Open the live spreadsheet, source evidence, and agent workflow. |
 
 ## Features
 
 | | Capability | What you can do |
 | :---: | :--- | :--- |
 | 💬 | **Connected WhatsApp** | Switch saved accounts, browse synchronized chats, send messages and attachments, and see delivery/read receipts. |
-| ✨ | **Prompt-driven tasks** | Start order analysis, question review, or monitoring with a short request. |
+| ✨ | **Prompt-driven tasks** | Start order analysis, question review, or monitoring with a natural-language request. |
 | 🧩 | **Parallel agents** | Process text and image order sources in separate jobs, then independently verify the combined result. |
 | 📊 | **Live spreadsheet** | Keep orders in the website, follow source evidence, filter records, and optionally export Excel. |
 | 📚 | **Owner knowledge** | Hand unknown questions to the owner and reuse approved answers in future drafts. |
@@ -70,7 +70,7 @@ cd WABuddy
 1. Open **http://127.0.0.1:8787**.
 2. In WhatsApp, choose **Linked devices → Link a device** and scan the QR.
 3. Configure your execution engine in **Settings**.
-4. Open **Chat**, enter `orders`, and view the result in **Spreadsheet**.
+4. Open **Chat**, ask “Organize my customer orders into a spreadsheet and keep it updated.”, and view the result in **Spreadsheet**.
 
 Each installation starts without linked accounts or AI credentials. Pairing codes come from the actual WhatsApp connector.
 
@@ -91,13 +91,13 @@ Stopping pauses automatic recovery and preserves linked-device sessions. Explici
 
 | Request | Outcome |
 | :--- | :--- |
-| `orders` | Build the orders spreadsheet and watch for changes. |
-| `orders for <customer name or international phone number>` | Limit the order workflow to one synchronized conversation. |
-| `learn` | Review questions, hand off unknown answers, and use owner-approved knowledge. |
-| `phishing` | Review suspicious messages in the local queue. |
-| `stop` | Pause the selected account's monitoring policies. |
+| “Organize my customer orders into a spreadsheet and keep it updated.” | Build the orders spreadsheet and watch for changes. |
+| “Organize orders from [customer name or international phone number] into a spreadsheet and keep it updated.” | Limit the order workflow to one synchronized conversation. |
+| “Ask me when you don’t know an answer, and remember my approved answers for that customer.” | Review questions, hand off unknown answers, and use owner-approved knowledge. |
+| “Check my messages for possible phishing and flag them for my review.” | Review suspicious messages in the local queue. |
+| “Stop monitoring my conversations.” | Pause the selected account's monitoring policies. |
 
-You can also describe a task in your own words. Short commands select a workflow directly; longer requests use the AI coordinator. Message interpretation and verification use real model inference in either case.
+Write naturally—there is no required command vocabulary. The AI coordinator interprets your request, selects the relevant conversations, and plans the supported workflow. Name a customer or provide their international phone number when you want a specific conversation. One-word shortcuts remain optional; they are not the main interaction.
 
 **Choose your execution engine in Settings:**
 

@@ -19,6 +19,12 @@ type Mode='goal'|'knowledge'|'automation';
 type SpeechSession={lang:string;continuous:boolean;interimResults:boolean;start:()=>void;stop:()=>void;abort:()=>void;onstart:(()=>void)|null;onend:(()=>void)|null;onerror:((event:{error:string})=>void)|null;onresult:((event:{results:ArrayLike<ArrayLike<{transcript:string}>>})=>void)|null};
 type SpeechConstructor=new()=>SpeechSession;
 const suggestions:Record<Mode,string[]>={goal:['Find orders and export Excel','Find unanswered customers','Filter suspicious messages'],knowledge:['Remember my answer','Update opening hours','Check customer replies'],automation:['Keep my order sheet updated','Prepare a report every evening','Ask me when unsure']};
+const liveExamples:Record<string,string>={
+ Orders:'Organize my customer orders into a spreadsheet and keep it updated.',
+ Learn:'Ask me when you do not know an answer, and remember my approved answers for that customer. Prepare drafts without sending them.',
+ Phishing:'Check my messages for possible phishing and flag them for my review.',
+ Stop:'Stop monitoring my conversations. Keep my spreadsheet, messages, and saved knowledge.',
+};
 const examples:Record<string,string>={
  'Find orders and export Excel':'Read the conversations, find customer orders, and export them to Excel.',
  'Find unanswered customers':'Find customers who are still waiting for a reply.',
@@ -76,7 +82,7 @@ export function BuddyAssistant({mode='goal',seed='',onApprove,compact=false,audi
    {live?.error&&<p role="alert" className="buddy-voice-error">{live.error}</p>}
    {attachments.error&&<p role="alert" className="buddy-voice-error">{attachments.error}</p>}
   </div>
-  {!goal&&!live?.history&&<div className="buddy-suggestions">{(live?(mode==='goal'?['Orders','Learn','Phishing']:mode==='automation'?['Orders','Stop']:['Learn','Phishing']):suggestions[mode]).map(label=><button key={label} onClick={()=>{setInput(live?label.toLowerCase():examples[label]);root.current?.querySelector('textarea')?.focus();}}>{label}<ArrowRight size={12}/></button>)}</div>}
+  {!goal&&!live?.history&&<div className="buddy-suggestions">{(live?(mode==='goal'?['Orders','Learn','Phishing']:mode==='automation'?['Orders','Stop']:['Learn','Phishing']):suggestions[mode]).map(label=><button key={label} onClick={()=>{setInput(live?liveExamples[label]:examples[label]);root.current?.querySelector('textarea')?.focus();}}>{label}<ArrowRight size={12}/></button>)}</div>}
   <AnimatePresence>{attachments.isDragActive&&<DropOverlay/>}</AnimatePresence>
  </div>
  </section>;

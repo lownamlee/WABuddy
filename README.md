@@ -110,7 +110,7 @@ Provider availability and quotas apply separately from WABuddy's application lim
 ## How it works
 
 ```mermaid
-flowchart LR
+flowchart TD
     Request[Owner request] --> Queue[Account-scoped task queue]
     History[WhatsApp messages and images] --> Queue
     Queue --> Text[Text analyst]

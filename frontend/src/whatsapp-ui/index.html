@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f5f3">
+  <meta name="description" content="A local, interactive recreation of the WhatsApp Web interface with sample conversations.">
+  <title>WhatsApp UI</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div id="app" class="app">
+    <nav id="rail" class="rail" aria-label="Main navigation"></nav>
+    <aside id="sidebar" class="sidebar" aria-label="Chats"></aside>
+    <main id="main" class="main" aria-label="Conversation"></main>
+  </div>
+  <div id="popover" class="popover" hidden></div>
+  <div id="modal-root"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <input id="attachment-input" type="file" hidden>
+</body>
+</html>

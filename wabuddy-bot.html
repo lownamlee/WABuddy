@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f0f2ec">
+  <title>Buddy — WABuddy</title>
+  <style>
+    :root{font-family:Arial,Helvetica,sans-serif;color:#28382c;background:#f0f2ec;font-synthesis:none;--look-x:0px;--look-y:0px;--lean:0deg}
+    *{box-sizing:border-box}
+    body{margin:0;min-width:280px;min-height:100svh;overflow:hidden;-webkit-tap-highlight-color:transparent}
+    body:before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse at 50% 42%,#fff 0%,transparent 58%);pointer-events:none}
+    .grid{position:fixed;inset:0;background-image:linear-gradient(#50694f08 1px,transparent 1px),linear-gradient(90deg,#50694f08 1px,transparent 1px);background-size:72px 72px;mask-image:radial-gradient(ellipse at center,#000,transparent 72%);pointer-events:none}
+    main{position:fixed;inset:0 0 100px;display:grid;place-items:center}
+    .stage{position:relative;width:clamp(270px,72vw,390px);aspect-ratio:1}
+    .shadow{position:absolute;left:50%;top:85%;width:42%;height:13px;border-radius:50%;background:#657c612b;filter:blur(12px);transform:translateX(-50%);animation:shadow-breathe 4s ease-in-out infinite;pointer-events:none}
+    button{font:inherit;cursor:pointer;touch-action:manipulation}
+    #buddy{position:relative;display:block;width:100%;height:100%;padding:0;border:0;background:transparent;border-radius:50%;outline-offset:-40px}
+    #buddy svg{display:block;width:100%;height:100%;overflow:visible;pointer-events:none}
+    button:focus-visible{outline:2px solid #407e55;outline-offset:6px}
+    #buddy:focus-visible{outline-offset:-42px}
+    .controls{position:fixed;left:0;right:0;bottom:max(34px,env(safe-area-inset-bottom));display:flex;justify-content:center;padding:0 20px}
+    #cycle{display:flex;align-items:center;gap:10px;min-width:152px;min-height:46px;padding:13px 19px;border:0;border-radius:30px;background:#28382c;color:#f2f7e9;font-size:12px;transition:background .2s,transform .2s;box-shadow:0 4px 16px #28382c08}
+    #cycle:hover{background:#425745;transform:translateY(-2px)}
+    #cycle:active{transform:translateY(0) scale(.97)}
+    #cycle svg{width:17px;height:17px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+    #cycle .arrow{width:14px;height:14px;margin-left:auto;opacity:.65}
+    #state-name{padding-right:12px;text-align:left}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    #float{animation:float 4s ease-in-out infinite}
+    #pose,#lean,#squash{transform-origin:114px 114px}
+    #pose{transition:transform .55s cubic-bezier(.2,.85,.25,1.2)}
+    #lean{transform:rotate(var(--lean));transition:transform .16s ease-out}
+    #body{fill:#25bb68;transition:fill .45s}
+    #face{transform:translate(var(--look-x),var(--look-y));transition:transform .12s ease-out}
+    .state-visual{display:none}
+    body[data-state="ready"] .is-ready,body[data-state="listening"] .is-listening,body[data-state="thinking"] .is-thinking,body[data-state="done"] .is-done{display:inline}
+    .eye{transform-box:fill-box;transform-origin:center;animation:blink 5.2s infinite}
+    body[data-state="listening"] #pose{transform:rotate(-12deg) scale(1.035)}
+    body[data-state="listening"] #body{fill:#23c779}
+    body[data-state="listening"] #float{animation:listen-bob 2s ease-in-out infinite}
+    .ripple{transform-origin:114px 114px;animation:ripple 2.1s ease-out infinite}
+    .ripple.second{animation-delay:-1.05s}
+    .sound-bar{transform-box:fill-box;transform-origin:center;animation:sound .65s ease-in-out infinite alternate}
+    .sound-bar.b2{animation-delay:-.4s}.sound-bar.b3{animation-delay:-.2s}.sound-bar.b4{animation-delay:-.55s}
+    body[data-state="thinking"] #pose{transform:rotate(12deg) scale(.96)}
+    body[data-state="thinking"] #body{fill:#1a9e62}
+    body[data-state="thinking"] #face{transform:translate(0,-4px)}
+    .orbit{transform-origin:114px 114px;animation:orbit 7s linear infinite}
+    .thought{animation:thought 1.15s ease-in-out infinite}.thought.t2{animation-delay:.15s}.thought.t3{animation-delay:.3s}
+    body[data-state="done"] #body{fill:#15b975}
+    body[data-state="done"] #pose{transform:rotate(-5deg)}
+    body[data-state="done"] #float{animation:celebrate 2s ease-in-out infinite}
+    .check-badge{transform-origin:220px 183px;animation:badge-in .55s cubic-bezier(.18,.9,.3,1.4) both}
+    .check-stroke{stroke-dasharray:48;stroke-dashoffset:48;animation:draw-check .45s .18s ease-out forwards}
+    .sparkle{transform-box:fill-box;transform-origin:center;animation:sparkle 1.8s ease-in-out infinite}.sparkle.s2{animation-delay:-.65s}.sparkle.s3{animation-delay:-1.2s}
+    body[data-state="done"] .shadow{animation:shadow-celebrate 2s ease-in-out infinite}
+    .paused *{animation-play-state:paused!important}
+    @keyframes float{0%,100%{transform:translateY(2px)}50%{transform:translateY(-9px)}}
+    @keyframes shadow-breathe{0%,100%{opacity:.8;scale:1}50%{opacity:.5;scale:.88}}
+    @keyframes blink{0%,42%,46%,93%,97%,100%{transform:scaleY(1)}44%,95%{transform:scaleY(.07)}}
+    @keyframes listen-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+    @keyframes ripple{0%{transform:scale(.81);opacity:0}15%{opacity:.5}100%{transform:scale(1.08);opacity:0}}
+    @keyframes sound{from{transform:scaleY(.3)}to{transform:scaleY(1)}}
+    @keyframes orbit{to{transform:rotate(360deg)}}
+    @keyframes thought{0%,55%,100%{transform:translateY(0);opacity:.5}25%{transform:translateY(-10px);opacity:1}}
+    @keyframes celebrate{0%,38%,100%{transform:translateY(0)}14%{transform:translateY(-22px)}25%{transform:translateY(3px)}31%{transform:translateY(-6px)}}
+    @keyframes shadow-celebrate{0%,38%,100%{opacity:.7;scale:1}14%{opacity:.3;scale:.76}}
+    @keyframes badge-in{from{transform:scale(0)}to{transform:scale(1)}}
+    @keyframes draw-check{to{stroke-dashoffset:0}}
+    @keyframes sparkle{0%,100%{transform:scale(.65) rotate(-10deg);opacity:.3}50%{transform:scale(1.15) rotate(12deg);opacity:1}}
+    @media(max-width:420px){.stage{width:86vw}.controls{bottom:max(28px,env(safe-area-inset-bottom))}}
+    @media(max-height:500px){main{bottom:65px}.stage{width:min(64vh,280px)}.controls{bottom:16px}#cycle{min-height:42px;padding:11px 17px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}.ripple{opacity:.25}.ripple.second{display:none}.check-stroke{stroke-dashoffset:0}.thought{opacity:1}}
+  </style>
+</head>
+<body data-state="ready">
+  <div class="grid" aria-hidden="true"></div>
+  <main aria-label="WABuddy mascot">
+    <div class="stage">
+      <div class="shadow" aria-hidden="true"></div>
+      <button id="buddy" type="button" aria-label="Buddy is ready. Click to listen." title="Click Buddy">
+        <svg viewBox="-65 -65 360 360" aria-hidden="true" focusable="false">
+          <!-- Silhouette and original eyes adapted from https://github.com/lenxism/grok-bot-mascot-3d/blob/main/assets/grok-bot-mark.svg -->
+          <g class="state-visual is-listening" fill="none" stroke="#4cb97c" stroke-width="1.5">
+            <circle class="ripple" cx="114" cy="114" r="148"/>
+            <circle class="ripple second" cx="114" cy="114" r="148"/>
+          </g>
+          <g class="state-visual is-thinking">
+            <g class="orbit">
+              <circle cx="114" cy="114" r="145" fill="none" stroke="#79a98b" stroke-width="1.5" stroke-dasharray="2 10" opacity=".55"/>
+              <circle cx="114" cy="-31" r="8" fill="#269960"/>
+              <circle cx="240" cy="186" r="6" fill="#6dbc83"/>
+              <circle cx="-12" cy="186" r="4" fill="#a6c9a7"/>
+            </g>
+          </g>
+          <g id="float"><g id="pose"><g id="lean"><g id="squash">
+            <path id="body" d="M228.541 114.228C228.541 130.133 225.184 145.994 218.738 160.534C212.674 174.217 203.904 186.669 193.065 196.988C155.933 232.34 99.497 238.596 55.5255 212.24C45.097 205.99 35.6851 198.072 27.7451 188.866C19.1926 178.953 12.3686 167.569 7.65781 155.351C2.60712 142.264 0 128.257 0 114.228C0 98.3219 3.35751 82.4611 9.80315 67.9215C15.8672 54.2382 24.6377 41.7862 35.4767 31.4668C72.6081 -3.88483 129.044 -10.1413 173.016 16.2153C183.444 22.4653 192.856 30.3829 200.796 39.5896C209.349 49.5018 216.173 60.8859 220.883 73.1037C225.934 86.1906 228.541 100.198 228.541 114.228Z"/>
+            <g id="face" fill="#fffef8">
+              <g class="state-visual is-ready">
+                <path class="eye" d="M130.36 45.98L132.71 46.19L134.98 46.81L137.11 47.83L138.97 49.28L140.47 51.09L141.68 53.12L142.73 55.23L143.76 57.36L144.78 59.49L145.79 61.62L146.79 63.76L147.76 65.91L148.71 68.07L149.63 70.25L150.52 72.43L151.37 74.63L151.99 76.91L152.10 79.26L151.64 81.57L150.59 83.68L149.04 85.45L147.10 86.78L144.90 87.62L142.56 87.93L140.22 87.71L137.98 86.99L135.93 85.82L134.17 84.24L132.78 82.34L131.69 80.25L130.77 78.08L129.87 75.89L128.94 73.72L128.00 71.56L127.03 69.40L126.05 67.26L125.05 65.12L124.03 62.99L122.93 60.90L121.87 58.79L121.03 56.59L120.72 54.26L121.10 51.93L122.15 49.83L123.75 48.10L125.76 46.89L128.01 46.19Z"/>
+                <path class="eye" d="M176.61 37.08L178.72 37.59L180.70 38.48L182.52 39.65L184.20 41.03L185.71 42.59L187.03 44.31L188.20 46.14L189.26 48.03L190.27 49.96L191.26 51.89L192.23 53.84L193.16 55.80L194.05 57.78L194.92 59.77L195.74 61.78L196.53 63.80L197.27 65.84L197.97 67.90L198.47 70.01L198.63 72.18L198.40 74.33L197.58 76.33L195.95 77.72L193.83 78.08L191.71 77.65L189.76 76.69L188.03 75.38L186.53 73.82L185.28 72.05L184.25 70.13L183.40 68.14L182.63 66.11L181.87 64.07L181.07 62.05L180.25 60.04L179.39 58.05L178.49 56.07L177.57 54.10L176.61 52.15L175.62 50.22L174.59 48.31L173.53 46.41L172.54 44.48L171.86 42.42L171.76 40.26L172.62 38.30L174.45 37.19Z"/>
+              </g>
+              <g class="state-visual is-listening">
+                <ellipse cx="134" cy="71" rx="16" ry="24"/>
+                <ellipse cx="183" cy="64" rx="14" ry="23"/>
+              </g>
+              <g class="state-visual is-thinking">
+                <circle class="thought" cx="130" cy="73" r="9"/>
+                <circle class="thought t2" cx="156" cy="67" r="9"/>
+                <circle class="thought t3" cx="182" cy="61" r="9"/>
+              </g>
+              <g class="state-visual is-done" fill="none" stroke="#fffef8" stroke-linecap="round">
+                <path d="M119 77Q131 54 146 74M170 67Q181 46 195 64" stroke-width="10"/>
+                <path d="M144 98Q165 113 185 88" stroke-width="7"/>
+              </g>
+            </g>
+          </g></g></g></g>
+          <g class="state-visual is-listening" fill="#50b77b">
+            <rect class="sound-bar" x="-39" y="102" width="5" height="25" rx="2.5"/>
+            <rect class="sound-bar b2" x="-28" y="89" width="5" height="51" rx="2.5"/>
+            <rect class="sound-bar b3" x="252" y="89" width="5" height="51" rx="2.5"/>
+            <rect class="sound-bar b4" x="263" y="102" width="5" height="25" rx="2.5"/>
+          </g>
+          <g class="state-visual is-done">
+            <g class="check-badge">
+              <circle cx="220" cy="183" r="28" fill="#f0f2ec"/>
+              <circle cx="220" cy="183" r="23" fill="#d5f0da"/>
+              <path class="check-stroke" d="M209 183l7 7 15-16" fill="none" stroke="#188957" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <g fill="#59b77a">
+              <path class="sparkle" d="M-23 49l4-12 4 12 12 4-12 4-4 12-4-12-12-4Z"/>
+              <path class="sparkle s2" d="M235 14l3-10 3 10 10 3-10 3-3 10-3-10-10-3Z"/>
+              <path class="sparkle s3" d="M44 245l3-8 3 8 8 3-8 3-3 8-3-8-8-3Z"/>
+            </g>
+          </g>
+        </svg>
+      </button>
+    </div>
+  </main>
+  <div class="controls">
+    <button id="cycle" type="button" aria-label="Ready. Switch to Listening." title="Next: Listening">
+      <svg id="state-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.4 6.6L21 12l-6.6 2.4L12 21l-2.4-6.6L3 12l6.6-2.4Z"/></svg>
+      <span id="state-name">Ready</span>
+      <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>
+    </button>
+  </div>
+  <p id="announcement" class="sr-only" aria-live="polite" aria-atomic="true">Buddy is ready.</p>
+  <script>
+    (() => {
+      const states = [
+        { id:'ready', label:'Ready', description:'Buddy is ready. Move your pointer to guide the eyes.', icon:'<path d="M12 3l2.4 6.6L21 12l-6.6 2.4L12 21l-2.4-6.6L3 12l6.6-2.4Z"/>' },
+        { id:'listening', label:'Listening', description:'Buddy is listening, with wide eyes and moving sound waves.', icon:'<rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3m-4 0h8"/>' },
+        { id:'thinking', label:'Thinking', description:'Buddy is thinking, with three bouncing dots and an orbiting ring.', icon:'<circle cx="4" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="20" cy="12" r="1.5"/>' },
+        { id:'done', label:'Done', description:'Buddy is done, with happy eyes, a smile, and a checkmark.', icon:'<path d="m5 12 4 4L19 6"/>' }
+      ];
+      const buddy = document.getElementById('buddy');
+      const cycle = document.getElementById('cycle');
+      const label = document.getElementById('state-name');
+      const icon = document.getElementById('state-icon');
+      const announcement = document.getElementById('announcement');
+      const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+      let index = 0, pointerFrame = 0, tapAnimation;
+      function advance() {
+        index = (index + 1) % states.length;
+        const state = states[index], next = states[(index + 1) % states.length];
+        document.body.dataset.state = state.id;
+        label.textContent = state.label;
+        icon.innerHTML = state.icon;
+        announcement.textContent = state.description;
+        cycle.setAttribute('aria-label', state.label + '. Switch to ' + next.label + '.');
+        cycle.title = 'Next: ' + next.label;
+        buddy.setAttribute('aria-label', 'Buddy is ' + state.id + '. Click for ' + next.label + '.');
+        if (!reducedMotion.matches) {
+          if (tapAnimation) tapAnimation.cancel();
+          tapAnimation = document.getElementById('squash').animate([
+            {transform:'scale(1)'}, {transform:'scale(1.08,.92)',offset:.3},
+            {transform:'scale(.97,1.04)',offset:.65}, {transform:'scale(1)'}
+          ], {duration:420,easing:'ease-out'});
+        }
+      }
+      buddy.addEventListener('click',advance);
+      cycle.addEventListener('click',advance);
+      function resetLook() {
+        document.documentElement.style.setProperty('--look-x','0px');
+        document.documentElement.style.setProperty('--look-y','0px');
+        document.documentElement.style.setProperty('--lean','0deg');
+      }
+      document.addEventListener('pointermove', event => {
+        if (event.pointerType === 'touch' || reducedMotion.matches) return;
+        if (pointerFrame) cancelAnimationFrame(pointerFrame);
+        const x = event.clientX, y = event.clientY;
+        pointerFrame = requestAnimationFrame(() => {
+          const box = buddy.getBoundingClientRect();
+          const dx = Math.max(-1,Math.min(1,(x - box.left - box.width / 2) / (box.width * .8)));
+          const dy = Math.max(-1,Math.min(1,(y - box.top - box.height / 2) / (box.height * .8)));
+          document.documentElement.style.setProperty('--look-x',(dx * 9).toFixed(2)+'px');
+          document.documentElement.style.setProperty('--look-y',(dy * 7).toFixed(2)+'px');
+          document.documentElement.style.setProperty('--lean',(dx * 4).toFixed(2)+'deg');
+          pointerFrame = 0;
+        });
+      }, {passive:true});
+      document.documentElement.addEventListener('pointerleave',() => {
+        if (pointerFrame) cancelAnimationFrame(pointerFrame);
+        pointerFrame = 0;
+        resetLook();
+      });
+      reducedMotion.addEventListener('change',() => { if (reducedMotion.matches) { resetLook(); if (tapAnimation) tapAnimation.cancel(); } });
+      document.addEventListener('visibilitychange',() => document.body.classList.toggle('paused',document.hidden));
+    })();
+  </script>
+</body>
+</html>

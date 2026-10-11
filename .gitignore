@@ -1,0 +1,46 @@
+# Private runtime and credentials
+.local/
+.env
+.env.*
+!.env.example
+*.sqlite*
+*.db
+*.log
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*.json
+auth.json
+
+# Dependencies and generated output
+.venv/
+node_modules/
+dist/
+build/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+coverage/
+
+# Internal planning, presentations, recordings, and account evidence
+docs/
+artifacts/
+WorkBuddyArtifacts/
+attachments/
+skills/
+scripts/
+AGENTS.md
+VERIFICATION.md
+*[Pp][Ll][Aa][Nn]*.md
+*[Ss][Cc][Rr][Ii][Pp][Tt]*.md
+*[Pp][Rr][Ee][Ss][Ee][Nn][Tt][Aa][Tt][Ii][Oo][Nn]*.md
+*[Rr][Ee][Hh][Ee][Aa][Rr][Ss][Aa][Ll]*.md
+
+# Local editor and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

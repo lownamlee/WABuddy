@@ -1,0 +1,15 @@
+PROJECT BRIEF
+
+Studio team · Sample project
+
+Create a clean, friendly messaging interface that feels familiar.
+
+Goals
+  1. Keep conversations easy to find.
+  2. Make sharing ideas simple.
+  3. Use a warm, readable visual style.
+
+Next steps
+  Review the designs together at 2 PM.
+
+This is a sample document for the local WhatsApp UI demo.

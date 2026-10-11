@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wabuddy"
+version = "0.2.0"
+description = "Local WhatsApp Linked Devices pairing with an animated 3D phone"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi==0.143.0",
+  "uvicorn==0.54.0",
+  "neonize==0.5.2",
+  "segno==1.6.6",
+  "pillow==12.3.0",
+  "phonenumbers==9.0.41",
+  "cryptography==48.0.1",
+  "openpyxl==3.1.5",
+  "mcp==1.30.0",
+  "tzdata==2026.5",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==9.1.1", "httpx==0.28.1", "PyYAML==6.0.3"]
+
+[tool.setuptools.packages.find]
+where = ["backend"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["backend"]

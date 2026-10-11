@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Link WhatsApp to WABuddy with a live pairing QR.">
+  <title>WABuddy</title>
+</head>
+<body data-stage="pairing">
+  <div id="green-background" aria-hidden="true"></div>
+  <div class="ambient-grid" aria-hidden="true"></div>
+  <main>
+    <div id="shadow" aria-hidden="true"></div>
+    <canvas id="scene" role="img" aria-label="Loading the WABuddy phone"></canvas>
+    <div id="pairing-brand" aria-label="WABuddy">
+      <img src="/frontend/src/assets/wabuddy-icon.png" width="42" height="42" alt="">
+      <span class="brand-wordmark" aria-hidden="true"><span>WA</span><span>BUDDY</span></span>
+    </div>
+    <h1 id="pairing-title">Login</h1>
+    <div id="loading" role="status" aria-label="Loading phone"></div>
+    <div id="feedback" role="alert" hidden></div>
+    <p id="status" class="sr-only" aria-live="polite" aria-atomic="true">Preparing WhatsApp pairing.</p>
+  </main>
+  <section id="home" aria-label="WABuddy home" hidden>
+    <h1 id="brand" class="brand" tabindex="-1" aria-label="WABuddy">
+      <img src="/frontend/src/assets/wabuddy-icon.png" width="80" height="80" alt="">
+      <span class="brand-wordmark" aria-hidden="true"><span>WA</span><span>BUDDY</span></span>
+    </h1>
+  </section>
+  <div id="dashboard" hidden aria-label="WABuddy workspace"></div>
+  <div class="controls">
+    <div class="pairing-guide">
+      <p>Use WhatsApp to scan the QR code.</p>
+      <ol>
+        <li>Open WhatsApp and tap the three-dot menu (More options).</li>
+        <li>Select <strong>Linked devices</strong> &gt; <strong>Link a device</strong>.</li>
+      </ol>
+    </div>
+    <button id="regenerate" type="button" disabled>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 7v6h-6M20.1 8A8 8 0 1 0 20 16"/></svg>
+      <span>Regenerate QR</span>
+    </button>
+    <button id="enter-dashboard" type="button" disabled>Enter dashboard</button>
+  </div>
+  <noscript>WABuddy needs JavaScript enabled.</noscript>
+  <script type="module" src="/frontend/src/main.ts"></script>
+</body>
+</html>
